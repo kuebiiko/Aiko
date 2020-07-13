@@ -23,7 +23,7 @@ module.exports = {
                     episodes: result.episodes,
                     synopsis: result.synopsis
                   }
-                message.channel.send(JSON.stringify(myProcessedData))
+                message.channel.send(myProcessedData)
                 });
               })
    
