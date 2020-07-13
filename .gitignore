@@ -1,0 +1,4 @@
+
+node_modules/.bin/node-pre-gyp
+node_modules
+models
