@@ -1,8 +1,4 @@
 const fetch = require('node-fetch');
-const Discord = require('discord.js');
-const querystring = require('querystring');
-const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
-
 
 module.exports = {
 	name: 'meowfact',
@@ -24,7 +20,7 @@ module.exports = {
           };
           
           // Sends 'animuHugEmbed' to the channel.
-          message.channel.send({ embed: animuHugEmbed });
+          message.channel.send({ embed: meowFactEmbed });
 
             }
 

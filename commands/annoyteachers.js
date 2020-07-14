@@ -1,6 +1,4 @@
 const { prefix } = require('../config.json');
-const Discord = require('discord.js');
-const list = require('./commandments.json');
 
 module.exports = {
 	name: 'annoyteachers',
