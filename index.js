@@ -1,13 +1,17 @@
-const { Users, CurrencyShop } = require('./dbObjects');
-const { Op } = require('sequelize');
-const PREFIX = 'l.';
+
 const fs = require('fs');
 const Discord = require('discord.js');
-const currency = new Discord.Collection();
+new Discord.Collection();
 const { prefix, token } = require('./config.json');
+const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+
+mongoose.connect("mongodb+srv://kuebiiko:kuebiikoDB@aiko.lfzpo.mongodb.net/data", {
+	useUnifiedTopology: true,
+	useNewUrlParser: true,
+});
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -18,31 +22,77 @@ for (const file of commandFiles) {
 
 const cooldowns = new Discord.Collection();
 
-Reflect.defineProperty(currency, 'add', {
-	value: async function add(id, amount) {
-		const user = currency.get(id);
-		if (user) {
-			user.balance += Number(amount);
-			return user.save();
-		}
-		const newUser = await Users.create({ user_id: id, balance: amount });
-		currency.set(id, newUser);
-		return newUser;
-	},
-});
-
-Reflect.defineProperty(currency, 'getBalance', {
-	value: function getBalance(id) {
-		const user = currency.get(id);
-		return user ? user.balance : 0;
-	},
-});
+const music_list = [
+    "Lucky☆Orb || a.help", 
+    "1HOPE SNIPER || a.help",
+    "Celebration (Movie Edit) [feat. Toko Miura] || a.help", 
+	"Rolling Girl || a.help",
+	"Stardust Interlude || a.help",
+	"Fragment Of Stars || a.help",
+	"Inferno || a.help",
+	"WANNABE || a.help",
+	"Monster || a.help",
+	"Blueming || a.help",
+	"As if It\'s Your Last || a.help",
+	"How You Like That || a.help",
+	"Into The I-Land || a.help",
+	"Feel Special || a.help",
+	"PIRI || a.help",
+	"Chiisanahibi || a.help",
+	"Sour Candy || a.help",
+	"Fireworks Festival || a.help",
+	"Imakoko || a.help",
+	"Itomori High School || a.help",
+	"First View Of Tokyo || a.help",
+	"Evoking Memories || a.help",
+	"The night inn || a.help",
+	"Again to Goshintai || a.help",
+	"Theme of Mitsuha || a.help",
+	"Unseen two || a.help",
+	"Kuchikamizake trip || a.help",
+	"dreamin chuchu || a.help",
+	"Roki || a.help",
+	"Ghost Rule || a.help",
+	"Labyrinth || a.help",
+	"FIESTA || a.help",
+	"Psycho || a.help",
+	"Oh my god || a.help",
+	"Filter || a.help",
+	"Magic Shop || a.help",
+	"Best of Me || a.help",
+	"dimple || a.help",
+	"Spring Day || a.help",
+	"Outro: Wings || a.help",
+	"I Need U || a.help",
+	"Butterfly || a.help",
+	"Jelly || a.help",
+	"ICY || a.help",
+	"MORE & MORE || a.help",
+	"Gashina || a.help",
+	"Daechwita || a.help",
+	"eight(Prod.&Feat SUGA of BTS) || a.help",
+	"comethru || a.help",
+	"oh, mexico || a.help",
+	"desire || a.help",
+	"On The Moon || a.help",
+	"Falling Leaves are Beautiful || a.help",
+	"The Truth Untold || a.help",
+	"21:29 || a.help",
+	"instagram || a.help",
+	"Shiny Ray || a.help",
+	"mononoke in the fiction || a.help",
+	"forget-me-not || a.help",
+	"Touch off || a.help",
+	"Zenzenzense || a.help"
+    ];
 
 client.once('ready', async () => {
-	const storedBalances = await Users.findAll();
-    storedBalances.forEach(b => currency.set(b.user_id, b));
 
 	console.log(`Logged in as ${client.user.tag}!`);
+	setInterval(() => {
+        const song = Math.floor(Math.random() * (music_list.length - 1) + 1); // generates a random number between 1 and the length of the activities array list (in this case 5).
+        client.user.setActivity(music_list[song], { type: 'LISTENING'}); // sets bot's activities to one of the phrases in the arraylist.
+    }, 100000); // Runs this every 10 seconds.
 });
 
 client.on('message', async message => {
@@ -91,67 +141,11 @@ client.on('message', async message => {
 	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 	try {
-		command.execute(message, args);
+		command.execute(message);
 	} catch (error) {
 		console.error(error);
-		message.reply('there was an error trying to execute that command!');
-		message.channel.send(error);
-	}
-});
-
-
-client.on('message', async message => {
-	if (message.author.bot) return;
-	currency.add(message.author.id, 1);
-
-	if (!message.content.startsWith(PREFIX)) return;
-	const input = message.content.slice(PREFIX.length).trim();
-	if (!input.length) return;
-	const [, command, commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
-
-	if (command === 'bal') {
-		const target = message.mentions.users.first() || message.author;
-        return message.channel.send(`${target.tag} has ${currency.getBalance(target.id)} gold!`);
-
-	} else if (command === 'inv') {
-		const target = message.mentions.users.first() || message.author;
-        const user = await Users.findOne({ where: { user_id: target.id } });
-        const items = await user.getItems();
-
-        if (!items.length) return message.channel.send(`${target.tag} has nothing!`);
-        return message.channel.send(`${target.tag} currently has ${items.map(i => `${i.amount} ${i.item.name}`).join(', ')}.`);
-
-	} else if (command === 'transfer') {
-		const currentAmount = currency.getBalance(message.author.id);
-        const transferAmount = commandArgs.split(/ +/g).find(arg => !/<@!?\d+>/g.test(arg));
-        const transferTarget = message.mentions.users.first();
-
-        if (!transferAmount || isNaN(transferAmount)) return message.channel.send(`Sorry ${message.author}, that's an invalid amount.`);
-        if (transferAmount > currentAmount) return message.channel.send(`Sorry ${message.author}, you only have ${currentAmount}.`);
-        if (transferAmount <= 0) return message.channel.send(`Please enter an amount greater than zero, ${message.author}.`);
-
-        currency.add(message.author.id, -transferAmount);
-        currency.add(transferTarget.id, transferAmount);
-
-        return message.channel.send(`Successfully transferred ${transferAmount} gold to ${transferTarget.tag}. Your current balance is ${currency.getBalance(message.author.id)} gold!`);
-
-	} else if (command === 'buy') {
-		const item = await CurrencyShop.findOne({ where: { name: { [Op.like]: commandArgs } } });
-        if (!item) return message.channel.send(`That item doesn't exist.`);
-        if (item.cost > currency.getBalance(message.author.id)) {
-	        return message.channel.send(`You currently have ${currency.getBalance(message.author.id)} gold, but the ${item.name} costs ${item.cost} gold!`);
-        }
-
-        const user = await Users.findOne({ where: { user_id: message.author.id } });
-        currency.add(message.author.id, -item.cost);
-        await user.addItem(item);
-
-        message.channel.send(`You've bought: ${item.name}.`);
-
-	} else if (command === 'shop') {
-		const items = await CurrencyShop.findAll();
-        return message.channel.send(items.map(item => `${item.name}: ${item.cost} gold`).join('\n'), { code: true });
-        
+		await message.reply('there was an error trying to execute that command!');
+		await message.channel.send(error);
 	}
 });
 

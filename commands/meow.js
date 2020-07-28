@@ -1,17 +1,17 @@
 const fetch = require('node-fetch');
-const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
+
 
 
 module.exports = {
 	name: 'meow',
     description: 'cute cat :)',
     usage: 'l.meow',
-	execute(message, args) {
+	execute(message) {
             async function meow() {
               const { file } = await fetch('https://aws.random.cat/meow').then(response => response.json());
 
               const meowEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: `meow!`,
             
                 image: {
@@ -21,7 +21,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: meowEmbed });
+            await message.channel.send({embed: meowEmbed});
 	          
             }
 

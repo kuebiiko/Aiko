@@ -5,7 +5,7 @@ module.exports = {
 	name: 'meme',
     description: 'Fetch a random meme from top reddit meme subs!',
     usage: 'l.meme',
-	execute(message, args) {
+	execute(message) {
 
 
         async function fetchMeme() {
@@ -16,7 +16,7 @@ module.exports = {
             
 
             const memeEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: meme.title,
                 url: meme.postLink,
             
@@ -30,7 +30,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: memeEmbed });
+            await message.channel.send({embed: memeEmbed});
 
             }
 

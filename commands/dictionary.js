@@ -23,7 +23,7 @@ module.exports = {
               const [answer] = list;
 
               const embed = new Discord.MessageEmbed()
-	              .setColor('#e89e58')
+	              .setColor('53bed4')
               	.setTitle(answer.word)
 	              .setURL(answer.permalink)
 	              .addFields(
@@ -32,7 +32,7 @@ module.exports = {
 		              { name: 'Rating', value: `${answer.thumbs_up} thumbs up. ${answer.thumbs_down} thumbs down.` }
 	              );
 
-                message.channel.send(embed);
+                await message.channel.send(embed);
             }
 
             search();

@@ -21,7 +21,7 @@ module.exports = {
 		    } catch (error) {
 			    console.log(error);
 			    message.channel.send(`There was an error while reloading a command \`${command.name}\`:\n\`${error.message}\``);
-		    };
+		    }
         } else {
 			message.channel.send('You cannot refresh bot commands.');
 		}

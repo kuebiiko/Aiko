@@ -5,7 +5,7 @@ module.exports = {
 	name: 'trumpthonk',
     description: 'Get a random trump quote.',
     usage: 'l.trumpthonk',
-	execute(message, args) {
+	execute(message) {
 
         async function trumpThonk() {
 
@@ -15,14 +15,14 @@ module.exports = {
             
 
             const thonkEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: 'Trump thonks...',
                 description: thonk.message,
                 timestamp: new Date(),
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: thonkEmbed });
+            await message.channel.send({embed: thonkEmbed});
 
             }
 

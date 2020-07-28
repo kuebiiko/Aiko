@@ -4,12 +4,12 @@ module.exports = {
 	name: 'doggo',
     description: 'get a random picture of a dog',
     usage: 'l.doggo',
-	execute(message, args) {
+	execute(message) {
             async function bork() {
               const { url } = await fetch('https://random.dog/woof.json').then(response => response.json());
               
               const animuHugEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: `bork`,
             
                 image: {
@@ -19,7 +19,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: animuHugEmbed });
+            await message.channel.send({embed: animuHugEmbed});
 
             }
 

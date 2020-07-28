@@ -4,11 +4,11 @@ module.exports = {
 	name: 'koala',
     description: 'koaaaaaaaaaaallllllllllllaaaaaaaa',
     usage: 'l.koala',
-	execute(message, args) {
+	execute(message) {
             async function koala() {
               const { link } = await fetch('https://some-random-api.ml/img/koala').then(response => response.json())
               const koalaEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: `k o a l a !`,
             
                 image: {
@@ -18,7 +18,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: koalaEmbed });
+            await message.channel.send({embed: koalaEmbed});
 
             }
 

@@ -4,12 +4,12 @@ module.exports = {
 	name: 'redpanda',
     description: 'redpanda',
     usage: 'l.redpanda',
-	execute(message, args) {
+	execute(message) {
             async function fetchRedPanda() {
               const { link } = await fetch('https://some-random-api.ml/img/red_panda').then(response => response.json());
 
               const redPandaEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: `Have a cute red panda!`,
             
                 image: {
@@ -19,7 +19,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: redPandaEmbed });
+            await message.channel.send({embed: redPandaEmbed});
             }
 
             fetchRedPanda();

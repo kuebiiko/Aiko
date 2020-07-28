@@ -5,7 +5,7 @@ module.exports = {
 	name: 'hug',
     description: 'hug a friend!',
     usage: 'l.hug @user',
-	execute(message, args) {
+	execute(message) {
 
 
         async function animuHug() {
@@ -24,7 +24,7 @@ module.exports = {
             // Creates a Discord message embed named 'animuHugEmbed' with the link to the hug gif from earlier.
 
             const animuHugEmbed = {
-                color: 0xe89e58,
+                color: 0x53bed4,
                 title: `**${message.author.username}** hugs **${taggedUser.username}**!`,
             
                 image: {
@@ -34,7 +34,7 @@ module.exports = {
             };
             
             // Sends 'animuHugEmbed' to the channel.
-            message.channel.send({ embed: animuHugEmbed });
+            await message.channel.send({embed: animuHugEmbed});
 
             }
 
